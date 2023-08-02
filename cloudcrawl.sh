@@ -9,23 +9,21 @@ screamingfrogseospider --crawl $domain --headless --output-folder ~/crawl-data/ 
 
 now=$(date +"%Y_%m_%d")
 filename=${domain//./_}
-filename=${filename//-/_}
-filename=${filename//:/_}
-filename=${filename//\//_}
 filename="$filename"_"$now"
+bq mk ${filename}
 
-
-tr '\0' ' ' < ~/crawl-data/internal_all.csv > ~/crawl-data/internal_all_clean.csv
-tr '\0' ' ' < ~/crawl-data/directives_all.csv > ~/crawl-data/directives_all_clean.csv
-tr '\0' ' ' < ~/crawl-data/all_inlinks.csv > ~/crawl-data/all_inlinks_clean.csv
-
-bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-screaming_frog_crawls.${filename}_internal ~/crawl-data/internal_all_clean.csv
+tr '\0' ' ' < ~/crawl-data/${filename}_internal_all_${now}.csv > ~/crawl-data/${filename}_internal_all_clean_${now}.csv
+tr '\0' ' ' < ~/crawl-data/${filename}_directives_all_${now}.csv > ~/crawl-data/${filename}_directives_all_clean_${now}.csv
+tr '\0' ' ' < ~/crawl-data/${filename}_all_inlinks_${now}.csv > ~/crawl-data/${filename}_all_inlinks_clean_${now}.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-screaming_frog_crawls.${filename}_directives ~/crawl-data/directives_all_clean.csv
+${filename}.screaming_frog_crawls_internal_all_${now} ~/crawl-data/${filename}_internal_all_${now}.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-screaming_frog_crawls.${filename}_inlinks ~/crawl-data/all_inlinks_clean.csv
+${filename}.screaming_frog_crawls_directives_all_${now} ~/crawl-data/${filename}_directives_all_${now}.csv
+
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}.screaming_frog_crawls_all_inlinks_${now} ~/crawl-data/${filename}_all_inlinks_${now}.csv
+
 
 curl -i -H "Content-Type:application/json; charset=UTF-8" --data '{"text":"'"$domain"' crawl complete"}' "https://chat.googleapis.com/{token}"

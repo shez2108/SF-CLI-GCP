@@ -9,9 +9,11 @@ screamingfrogseospider --crawl $domain --headless --output-folder ~/crawl-data/ 
 
 now=$(date +"%Y_%m_%d")
 filename=${domain//./_}
-filename=${filename//[:\/-]/}
-filename=${filename:0:53}
-filename=$filename$now
+filename=${filename//-/_}
+filename=${filename//:/_}
+filename=${filename//\//_}
+filename="$filename"_"$now"
+
 
 tr '\0' ' ' < ~/crawl-data/internal_all.csv > ~/crawl-data/internal_all_clean.csv
 tr '\0' ' ' < ~/crawl-data/directives_all.csv > ~/crawl-data/directives_all_clean.csv

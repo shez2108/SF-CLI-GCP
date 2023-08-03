@@ -13,7 +13,8 @@ screamingfrogseospider --crawl $domain --headless --output-folder ~/crawl-data/ 
 now=$(date +"%Y_%m_%d") #defines date 
 filename=${domain//./_} # defines filename based on domain name
 #filename="$filename"_"$now"
-bq mk ${filename} # creates directory in bigquery based on the filename 
+
+bq mk ${filename}_sf_crawls # creates directory in bigquery based on the filename 
 
 # replace null values with spaces in the csv files 
 tr '\0' ' ' < ~/crawl-data/internal_all_${now}.csv > ~/crawl-data/internal_all_clean${now}.csv
@@ -21,13 +22,13 @@ tr '\0' ' ' < ~/crawl-data/directives_all${now}.csv > ~/crawl-data/directives_al
 tr '\0' ' ' < ~/crawl-data/all_inlinks${now}.csv > ~/crawl-data/all_inlinks_clean${now}.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}.screaming_frog_crawls_internal_all_${now} ~/crawl-data/${filename}_internal_all_${now}.csv
+${filename}_sf_crawls.internal_all_${now} ~/crawl-data/internal_all_clean${now}.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}.screaming_frog_crawls_directives_all_${now} ~/crawl-data/${filename}_directives_all_${now}.csv
+${filename}_sf_crawls.directives_all_${now} ~/crawl-data/directives_all_clean${now}.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}.screaming_frog_crawls_all_inlinks_${now} ~/crawl-data/${filename}_all_inlinks_${now}.csv
+${filename}_sf_crawls.all_inlinks_${now} ~/crawl-data/all_inlinks_clean${now}.csv
 
 
 curl -i -H "Content-Type:application/json; charset=UTF-8" --data '{"text":"'"$domain"' crawl complete"}' "https://chat.googleapis.com/{token}"

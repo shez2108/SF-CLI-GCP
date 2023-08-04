@@ -14,7 +14,7 @@ now=$(date +"%Y_%m_%d") #defines date
 filename=${domain//./_} # defines filename based on domain name
 #filename="$filename"_"$now"
 
-bq mk ${filename}_sf_crawls # creates directory in bigquery based on the filename 
+bq mk ${filename}_sf_crawls # creates dataset in bigquery based on the filename 
 
 # replace null values with spaces in the csv files 
 tr '\0' ' ' < ~/crawl-data/internal_all_${now}.csv > ~/crawl-data/internal_all_clean${now}.csv

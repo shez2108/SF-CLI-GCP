@@ -5,11 +5,11 @@ echo "Enter domain to crawl"
 read domain
 
 # Path to the .seospiderconfig file
-CONFIG_PATH="/home/clients/SEO Spider Config.seospiderconfig"
+CONFIG_PATH="/home/clients/SEO\ Spider\ Config.seospiderconfig"
 
 # Initiate crawl from screamingfrogseospider without GUI (headless) and define the output folder as the crawl-data directory 
-screamingfrogseospider --crawl $domain --headless --output-folder ~/crawl-data/ \
---config $CONFIG_PATH --export-tabs "Internal:All,Directives:All" --overwrite --bulk-export "All Inlinks" 
+screamingfrogseospider --crawl $domain --headless --config $CONFIG_PATH --output-folder ~/crawl-data/ \
+--export-tabs "Internal:All,Directives:All" --overwrite --bulk-export "All Inlinks" 
 
 now=$(date +"%Y_%m_%d") # Defines date 
 filename=${domain//./_} # Defines filename based on domain name

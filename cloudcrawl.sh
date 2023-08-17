@@ -22,7 +22,7 @@ bq mk ${filename}_sf_crawls # creates dataset in bigquery based on the filename
 tr '\0' ' ' < ~/crawl-data/internal_all.csv > ~/crawl-data/internal_all_clean.csv
 tr '\0' ' ' < ~/crawl-data/directives_all.csv > ~/crawl-data/directives_all_clean.csv
 tr '\0' ' ' < ~/crawl-data/all_inlinks.csv > ~/crawl-data/all_inlinks_clean.csv
-tr '\0' ' ' < ~/crawl-data/all_inlinks.csv > ~/crawl-data/hreflang_all_clean.csv
+tr '\0' ' ' < ~/crawl-data/hreflang_all_clean.csv > ~/crawl-data/hreflang_all_clean.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
 ${filename}_sf_crawls.internal${now} ~/crawl-data/internal_all_clean.csv

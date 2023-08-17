@@ -41,8 +41,10 @@ ${filename}_sf_crawls.hreflang${now} ~/crawl-data/hreflang_all_clean.csv
 curl -i -H "Content-Type:application/json; charset=UTF-8" --data '{"text":"'"$domain"' crawl complete"}' "https://chat.googleapis.com/{token}"
 
 # Create a GCS bucket
-gsutil mb gs://${filename}-sf-crawls/
+if ! gsutil ls gs://${filename}/ &>/dev/null; then
+  gsutil mb gs://${filename}/
+fi 
 
 # Upload the cleaned CSV files to the GCS bucket
-gsutil cp ~/crawl-data/*_clean.csv gs://${filename}-sf-crawls/
+gsutil cp ~/crawl-data/*_clean.csv gs://${filename}/
 

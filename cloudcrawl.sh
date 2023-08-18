@@ -53,7 +53,7 @@ if [ ! -f ~/crawl-data/hreflang_all.csv ]; then
     exit 1
 fi
 
-if [ ! -f ~/crawl-data/structured_data_contains_structured_data.csv ]; then
+if [ ! -f ~/crawl-data/structured_data_rdfa_urls.csv ]; then
     echo "Error: structured_data_contains_structured_data.csv does not exist."
     exit 1
 fi
@@ -66,7 +66,7 @@ tr '\0' ' ' < ~/crawl-data/all_inlinks.csv > ~/crawl-data/all_inlinks_clean.csv
 tr '\0' ' ' < ~/crawl-data/pagination_all.csv > ~/crawl-data/pagination_all_clean.csv #outlinks
 tr '\0' ' ' < ~/crawl-data/hreflang_all.csv > ~/crawl-data/hreflang_all_clean.csv #hreflang
 # enable JSON-LD, Microdata, RDFa URLs
-tr '\0' ' ' < ~/crawl-data/structured_data_contains_structured_data.csv > ~/crawl-data/structured_data_contains_structured_data_clean.csv #
+tr '\0' ' ' < ~/crawl-data/structured_data_rdfa_urls.csv > ~/crawl-data/structured_data_rdfa_urls_clean.csv #
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
 ${filename}_sf_crawls.internal${now} ~/crawl-data/internal_all_clean.csv
@@ -81,7 +81,7 @@ bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_
 ${filename}_sf_crawls.pagination${now} ~/crawl-data/pagination_all_clean.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.structured_data${now} ~/crawl-data/structured_data_contains_structured_data_clean.csv
+${filename}_sf_crawls.structured_data${now} ~/crawl-data/structured_data_rdfa_urls_clean.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
 ${filename}_sf_crawls.sitemaps${now} ~/crawl-data/sitemaps_all_clean.csv

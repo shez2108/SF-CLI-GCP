@@ -27,67 +27,61 @@ if [ ! -f ~/crawl-data/internal_all.csv ]; then
     echo "Error: internal_all.csv does not exist."
     exit 1
 fi
+# replace null values with spaces in the csv files
+tr '\0' ' ' < ~/crawl-data/internal_all.csv > ~/crawl-data/internal_all_clean.csv
+
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}_sf_crawls.internal${now} ~/crawl-data/internal_all_clean.csv
 
 if [ ! -f ~/crawl-data/directives_all.csv ]; then
     echo "Error: directives_all.csv does not exist."
     exit 1
 fi
+tr '\0' ' ' < ~/crawl-data/directives_all.csv > ~/crawl-data/directives_all_clean.csv
+
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}_sf_crawls.directives${now} ~/crawl-data/directives_all_clean.csv
 
 if [ ! -f ~/crawl-data/sitemaps_all.csv ]; then
     echo "Error: sitemaps_all.csv does not exist."
     exit 1
 fi
+tr '\0' ' ' < ~/crawl-data/sitemaps_all.csv > ~/crawl-data/sitemaps_all_clean.csv
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}_sf_crawls.sitemaps${now} ~/crawl-data/sitemaps_all_clean.csv
 
 if [ ! -f ~/crawl-data/all_inlinks.csv ]; then
     echo "Error: all_inlinks.csv does not exist."
     exit 1
 fi
+tr '\0' ' ' < ~/crawl-data/all_inlinks.csv > ~/crawl-data/all_inlinks_clean.csv
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}_sf_crawls.inlinks_${now} ~/crawl-data/all_inlinks_clean.csv
 
 if [ ! -f ~/crawl-data/pagination_all.csv ]; then
     echo "Error: pagination_all.csv does not exist."
     exit 1
 fi
+tr '\0' ' ' < ~/crawl-data/pagination_all.csv > ~/crawl-data/pagination_all_clean.csv
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}_sf_crawls.pagination${now} ~/crawl-data/pagination_all_clean.csv
 
 if [ ! -f ~/crawl-data/hreflang_all.csv ]; then
     echo "Error: hreflang_all.csv does not exist."
     exit 1
 fi
+tr '\0' ' ' < ~/crawl-data/hreflang_all.csv > ~/crawl-data/hreflang_all_clean.csv 
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}_sf_crawls.hreflang${now} ~/crawl-data/hreflang_all_clean.csv
 
 if [ ! -f ~/crawl-data/structured_data_rdfa_urls.csv ]; then
     echo "Error: structured_data_contains_structured_data.csv does not exist."
     exit 1
 fi
-
-# replace null values with spaces in the csv files
-tr '\0' ' ' < ~/crawl-data/internal_all.csv > ~/crawl-data/internal_all_clean.csv
-tr '\0' ' ' < ~/crawl-data/directives_all.csv > ~/crawl-data/directives_all_clean.csv
-tr '\0' ' ' < ~/crawl-data/sitemaps_all.csv > ~/crawl-data/sitemaps_all_clean.csv
-tr '\0' ' ' < ~/crawl-data/all_inlinks.csv > ~/crawl-data/all_inlinks_clean.csv
-tr '\0' ' ' < ~/crawl-data/pagination_all.csv > ~/crawl-data/pagination_all_clean.csv #outlinks
-tr '\0' ' ' < ~/crawl-data/hreflang_all.csv > ~/crawl-data/hreflang_all_clean.csv #hreflang
-# enable JSON-LD, Microdata, RDFa URLs
-tr '\0' ' ' < ~/crawl-data/structured_data_rdfa_urls.csv > ~/crawl-data/structured_data_rdfa_urls_clean.csv #
-
-bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.internal${now} ~/crawl-data/internal_all_clean.csv
-
-bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.directives${now} ~/crawl-data/directives_all_clean.csv
-
-bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.inlinks_${now} ~/crawl-data/all_inlinks_clean.csv
-
-bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.pagination${now} ~/crawl-data/pagination_all_clean.csv
-
+tr '\0' ' ' < ~/crawl-data/structured_data_rdfa_urls.csv > ~/crawl-data/structured_data_rdfa_urls_clean.csv
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
 ${filename}_sf_crawls.structured_data${now} ~/crawl-data/structured_data_rdfa_urls_clean.csv
 
-bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.sitemaps${now} ~/crawl-data/sitemaps_all_clean.csv
-
-bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.hreflang${now} ~/crawl-data/hreflang_all_clean.csv
 
 curl -i -H "Content-Type:application/json; charset=UTF-8" --data '{"text":"'"$domain"' crawl complete"}' "https://chat.googleapis.com/{token}"
 

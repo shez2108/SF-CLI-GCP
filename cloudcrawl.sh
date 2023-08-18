@@ -9,7 +9,7 @@ configpath="/home/clients/Config.seospiderconfig"
 
 # initiate crawl from screamingfrogseospider without GUI (headless) and define the output folder as the crawl-data directory
 screamingfrogseospider --crawl "$domain" --headless --config "$configpath" --output-folder ~/crawl-data/ \
---export-tabs "Internal:All,Directives:All" --overwrite --bulk-export "All Inlinks" # data should be exported from these tabs in the .deb
+--export-tabs "Internal:All,Directives:All,Hreflang:All" --overwrite --bulk-export "All Inlinks,All Outlinks,Contains Structured Data" # data should be exported from these tabs in the .deb
 
 
 now=$(date +"%Y_%m_%d") #defines date
@@ -26,7 +26,10 @@ fi
 tr '\0' ' ' < ~/crawl-data/internal_all.csv > ~/crawl-data/internal_all_clean.csv
 tr '\0' ' ' < ~/crawl-data/directives_all.csv > ~/crawl-data/directives_all_clean.csv
 tr '\0' ' ' < ~/crawl-data/all_inlinks.csv > ~/crawl-data/all_inlinks_clean.csv
-#tr '\0' ' ' < ~/crawl-data/hreflang_all_clean.csv > ~/crawl-data/hreflang_all_clean.csv
+tr '\0' ' ' < ~/crawl-data/all_outlinks.csv > ~/crawl-data/all_outlinks_clean.csv #outlinks
+tr '\0' ' ' < ~/crawl-data/hreflang_all.csv > ~/crawl-data/hreflang_all_clean.csv #hreflang
+# enable JSON-LD, Microdata, RDFa URLs
+tr '\0' ' ' < ~/crawl-data/contains_structured_data_detailed_report.csv > ~/crawl-data/contains_structured_data_detailed_report_clean.csv #
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
 ${filename}_sf_crawls.internal${now} ~/crawl-data/internal_all_clean.csv
@@ -37,8 +40,14 @@ ${filename}_sf_crawls.directives${now} ~/crawl-data/directives_all_clean.csv
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
 ${filename}_sf_crawls.inlinks_${now} ~/crawl-data/all_inlinks_clean.csv
 
-#bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-#${filename}_sf_crawls.hreflang.csv${now} ~/crawl-data/hreflang_all_clean.csv
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}_sf_crawls.outlinks_${now} ~/crawl-data/all_outlinks_clean.csv
+
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}_sf_crawls.structured_data${now} ~/crawl-data/contains_structured_data_detailed_report_clean.csv
+
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}_sf_crawls.hreflang.csv${now} ~/crawl-data/hreflang_all_clean.csv
 
 curl -i -H "Content-Type:application/json; charset=UTF-8" --data '{"text":"'"$domain"' crawl complete"}' "https://chat.googleapis.com/{token}"
 
@@ -48,4 +57,4 @@ if ! gsutil ls gs://${filename}/ &>/dev/null; then
 fi
 
 # Upload the cleaned CSV files to the GCS bucket
-gsutil cp ~/crawl-data/*_clean.csv gs://${filename}/
+gsutil cp ~/crawl-data/*_clean.csv gs://${filename}/sf-crawl-data

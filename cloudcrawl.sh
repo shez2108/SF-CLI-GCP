@@ -22,6 +22,42 @@ if ! bq ls ${filename}_sf_crawls &>/dev/null; then
   bq mk ${filename}_sf_crawls # creates dataset in bigquery based on the filename
 fi
 
+# Check if the file exists
+if [ ! -f ~/crawl-data/internal_all.csv ]; then
+    echo "Error: internal_all.csv does not exist."
+    exit 1
+fi
+
+if [ ! -f ~/crawl-data/directives_all.csv ]; then
+    echo "Error: directives_all.csv does not exist."
+    exit 1
+fi
+
+if [ ! -f ~/crawl-data/sitemaps_all.csv ]; then
+    echo "Error: sitemaps_all.csv does not exist."
+    exit 1
+fi
+
+if [ ! -f ~/crawl-data/all_inlinks.csv ]; then
+    echo "Error: all_inlinks.csv does not exist."
+    exit 1
+fi
+
+if [ ! -f ~/crawl-data/pagination_all.csv ]; then
+    echo "Error: pagination_all.csv does not exist."
+    exit 1
+fi
+
+if [ ! -f ~/crawl-data/hreflang_all.csv ]; then
+    echo "Error: hreflang_all.csv does not exist."
+    exit 1
+fi
+
+if [ ! -f ~/crawl-data/structured_data_contains_structured_data.csv ]; then
+    echo "Error: structured_data_contains_structured_data.csv does not exist."
+    exit 1
+fi
+
 # replace null values with spaces in the csv files
 tr '\0' ' ' < ~/crawl-data/internal_all.csv > ~/crawl-data/internal_all_clean.csv
 tr '\0' ' ' < ~/crawl-data/directives_all.csv > ~/crawl-data/directives_all_clean.csv

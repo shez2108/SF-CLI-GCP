@@ -9,7 +9,7 @@ configpath="/home/clients/Config.seospiderconfig"
 
 # initiate crawl from screamingfrogseospider without GUI (headless) and define the output folder as the crawl-data directory
 screamingfrogseospider --crawl "$domain" --headless --config "$configpath" --output-folder ~/crawl-data/ \
---export-tabs "Internal:All,Directives:All,Hreflang:All" --overwrite --bulk-export "All Inlinks,All Outlinks,Contains Structured Data" # data should be exported from these tabs in the .deb
+--export-tabs "Internal:All,Directives:All,Hreflang:All,Pagination:All,Structured Data:All,Sitemaps:All" --overwrite --bulk-export "All Inlinks" # data should be exported from these tabs in the .deb
 
 
 now=$(date +"%Y_%m_%d") #defines date
@@ -25,11 +25,12 @@ fi
 # replace null values with spaces in the csv files
 tr '\0' ' ' < ~/crawl-data/internal_all.csv > ~/crawl-data/internal_all_clean.csv
 tr '\0' ' ' < ~/crawl-data/directives_all.csv > ~/crawl-data/directives_all_clean.csv
+tr '\0' ' ' < ~/crawl-data/sitemaps_all.csv > ~/crawl-data/sitemaps_all_clean.csv
 tr '\0' ' ' < ~/crawl-data/all_inlinks.csv > ~/crawl-data/all_inlinks_clean.csv
-tr '\0' ' ' < ~/crawl-data/all_outlinks.csv > ~/crawl-data/all_outlinks_clean.csv #outlinks
+tr '\0' ' ' < ~/crawl-data/pagination_all.csv > ~/crawl-data/pagination_all_clean.csv #outlinks
 tr '\0' ' ' < ~/crawl-data/hreflang_all.csv > ~/crawl-data/hreflang_all_clean.csv #hreflang
 # enable JSON-LD, Microdata, RDFa URLs
-tr '\0' ' ' < ~/crawl-data/contains_structured_data_detailed_report.csv > ~/crawl-data/contains_structured_data_detailed_report_clean.csv #
+tr '\0' ' ' < ~/crawl-data/structured_data_contains_structured_data.csv > ~/crawl-data/structured_data_contains_structured_data_clean.csv #
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
 ${filename}_sf_crawls.internal${now} ~/crawl-data/internal_all_clean.csv
@@ -41,10 +42,13 @@ bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_
 ${filename}_sf_crawls.inlinks_${now} ~/crawl-data/all_inlinks_clean.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.outlinks_${now} ~/crawl-data/all_outlinks_clean.csv
+${filename}_sf_crawls.pagination${now} ~/crawl-data/pagination_all_clean.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.structured_data${now} ~/crawl-data/contains_structured_data_detailed_report_clean.csv
+${filename}_sf_crawls.structured_data${now} ~/crawl-data/structured_data_contains_structured_data_clean.csv
+
+bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
+${filename}_sf_crawls.sitemaps${now} ~/crawl-data/sitemaps_all_clean.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
 ${filename}_sf_crawls.hreflang.csv${now} ~/crawl-data/hreflang_all_clean.csv

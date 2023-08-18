@@ -5,7 +5,7 @@ echo "Enter domain to crawl"
 
 read domain
 
-configpath = /home/clients/SEO\ Spider\ Config.seospiderconfig
+configpath=/home/clients/SEO\ Spider\ Config.seospiderconfig
 
 # initiate crawl from screamingfrogseospider without GUI (headless) and define the output folder as the crawl-data directory
 screamingfrogseospider --crawl $domain --headless --config $configpath --output-folder ~/crawl-data/ \

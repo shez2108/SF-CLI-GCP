@@ -51,7 +51,7 @@ bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_
 ${filename}_sf_crawls.sitemaps${now} ~/crawl-data/sitemaps_all_clean.csv
 
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.hreflang.csv${now} ~/crawl-data/hreflang_all_clean.csv
+${filename}_sf_crawls.hreflang${now} ~/crawl-data/hreflang_all_clean.csv
 
 curl -i -H "Content-Type:application/json; charset=UTF-8" --data '{"text":"'"$domain"' crawl complete"}' "https://chat.googleapis.com/{token}"
 

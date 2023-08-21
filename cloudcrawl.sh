@@ -75,7 +75,7 @@ bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_
 ${filename}_sf_crawls.hreflang${now} ~/crawl-data/hreflang_all_clean.csv
 
 if [ ! -f ~/crawl-data/structured_data_rdfa_urls.csv ]; then
-    echo "Error: structured_data_contains_structured_data.csv does not exist."
+    echo "Error: structured_data_rdfa_urls.csv does not exist."
     exit 1
 fi
 tr '\0' ' ' < ~/crawl-data/structured_data_rdfa_urls.csv > ~/crawl-data/structured_data_rdfa_urls_clean.csv

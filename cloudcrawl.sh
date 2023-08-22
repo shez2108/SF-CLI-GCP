@@ -9,7 +9,7 @@ configpath="/home/clients/Config.seospiderconfig"
 
 # initiate crawl from screamingfrogseospider without GUI (headless) and define the output folder as the crawl-data directory
 screamingfrogseospider --crawl "$domain" --headless --config "$configpath" --output-folder ~/crawl-data/ \
---export-tabs "Internal:All,Directives:All,Hreflang:All,Pagination:All,Structured Data:All,Sitemaps:All" --overwrite --bulk-export "All Inlinks,Content" 
+--export-tabs "Internal:All,Directives:All,Hreflang:All,Pagination:All,Structured Data:All,Sitemaps:All" --overwrite --bulk-export "All Inlinks,All Content" 
 # data should be exported from these tabs in the .deb
 
 #JavaScript:All,Links:All

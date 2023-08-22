@@ -86,14 +86,6 @@ fi
 #${filename}_sf_crawls.structured_data${now} ~/crawl-data/structured_data_all_clean.csv
 
 
-if [ ! -f ~/crawl-data/links_all.csv ]; then
-    echo "Error: links_all.csv does not exist."
-    exit 1
-fi
-tr '\0' ' ' < ~/crawl-data/links_all.csv > ~/crawl-data/links_all_clean.csv
-bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \
-${filename}_sf_crawls.links_all${now} ~/crawl-data/links_all_clean.csv
-
 if [ ! -f ~/crawl-data/content_all.csv ]; then
     #echo "Error: all_inlinks.csv does not exist."
     #exit 1

@@ -87,8 +87,8 @@ fi
 
 
 if [ ! -f ~/crawl-data/content_all.csv ]; then
-    #echo "Error: all_inlinks.csv does not exist."
-    #exit 1
+    echo "Error: content_all.csv does not exist."
+    exit 1
 fi
 tr '\0' ' ' < ~/crawl-data/content_all.csv > ~/crawl-data/content_all_clean.csv
 bq load --autodetect --source_format=CSV --allow_quoted_newlines --allow_jagged_rows --ignore_unknown_values \

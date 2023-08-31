@@ -1,9 +1,11 @@
 #!/usr/bin/bash
 
 # ask the user what domain they want to crawl, entered domain is stored in the variable #domain
-echo "Enter domain to crawl"
+#echo "Enter domain to crawl"
 
-read domain
+#read domain
+
+domain="sleepseeker.co.uk"
 
 configpath="/home/clients/Config.seospiderconfig"
 
